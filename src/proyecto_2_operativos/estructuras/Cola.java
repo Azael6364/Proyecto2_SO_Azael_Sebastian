@@ -1,13 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package proyecto_2_operativos.estructuras;
 
-/**
- *
- * @author COMPUGAMER
- */
+// Cola generica implementada manualmente con nodos enlazados
+// No usa Queue, Stack, ArrayList ni ninguna coleccion de java.util
 public class Cola<T> {
     private Nodo<T> frente;
     private Nodo<T> finalCola;
@@ -19,7 +13,7 @@ public class Cola<T> {
         this.size = 0;
     }
 
-    // Metodo para agregar un elemento al final de la cola
+    // Agrega un elemento al final de la cola
     public void encolar(T data) {
         Nodo<T> nuevoNodo = new Nodo<>(data);
         if (estaVacia()) {
@@ -31,35 +25,26 @@ public class Cola<T> {
         size++;
     }
 
-    // Metodo para sacar y devolver el primer elemento de la cola
+    // Saca y devuelve el primer elemento de la cola
     public T desencolar() {
-        if (estaVacia()) {
-            return null; // O podrias lanzar una excepcion personalizada
-        }
+        if (estaVacia()) return null;
         T data = frente.getData();
         frente = frente.getNext();
-        if (frente == null) {
-            finalCola = null;
-        }
+        if (frente == null) finalCola = null;
         size--;
         return data;
     }
 
-    // Metodo para ver el primer elemento sin sacarlo
+    // Devuelve el primer elemento sin sacarlo
     public T verFrente() {
-        if (estaVacia()) {
-            return null;
-        }
+        if (estaVacia()) return null;
         return frente.getData();
     }
 
-    // Metodo para verificar si la cola esta vacia
-    public boolean estaVacia() {
-        return frente == null;
-    }
+    public boolean estaVacia() { return frente == null; }
 
-    // Metodo para obtener el tamano actual de la cola
-    public int getSize() {
-        return size;
-    }
+    public int getSize() { return size; }
+
+    // Devuelve el nodo frontal (util para recorrer la cola sin modificarla)
+    public Nodo<T> getFrente() { return frente; }
 }

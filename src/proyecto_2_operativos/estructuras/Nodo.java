@@ -1,13 +1,6 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package proyecto_2_operativos.estructuras;
 
-/**
- *
- * @author COMPUGAMER
- */
+// Nodo generico usado por la lista enlazada y la cola
 public class Nodo<T> {
     private T data;
     private Nodo<T> next;
