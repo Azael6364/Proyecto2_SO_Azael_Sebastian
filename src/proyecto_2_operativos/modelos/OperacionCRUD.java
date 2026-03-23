@@ -8,6 +8,9 @@ package proyecto_2_operativos.modelos;
  *
  * @author COMPUGAMER
  */
-public class OperacionCRUD {
-    
+public enum OperacionCRUD {
+    CREAR,
+    LEER,
+    ACTUALIZAR,
+    ELIMINAR
 }

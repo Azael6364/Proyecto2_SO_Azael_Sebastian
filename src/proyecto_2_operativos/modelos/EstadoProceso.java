@@ -8,6 +8,10 @@ package proyecto_2_operativos.modelos;
  *
  * @author COMPUGAMER
  */
-public class EstadoProceso {
-    
+public enum EstadoProceso {
+    NUEVO,
+    LISTO,
+    EJECUTANDO,
+    BLOQUEADO,
+    TERMINADO
 }
