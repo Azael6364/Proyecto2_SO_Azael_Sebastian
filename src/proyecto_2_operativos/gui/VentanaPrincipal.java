@@ -11,12 +11,14 @@ package proyecto_2_operativos.gui;
 public class VentanaPrincipal extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VentanaPrincipal.class.getName());
+    private javax.swing.JLabel[] bloquesVisuales = new javax.swing.JLabel[100];
 
     /**
      * Creates new form VentanaPrincipal
      */
     public VentanaPrincipal() {
         initComponents();
+        inicializarDiscoVisual();
     }
 
     /**
@@ -42,6 +44,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         jPanel4 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
+        panelDiscoVirtual = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -58,8 +61,10 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(30, 35, 45));
         jPanel1.setPreferredSize(new java.awt.Dimension(1280, 720));
+        jPanel1.setLayout(new java.awt.BorderLayout());
 
         jPanel2.setBackground(new java.awt.Color(40, 45, 55));
+        jPanel2.setPreferredSize(new java.awt.Dimension(0, 60));
 
         jButton1.setText("Crear");
 
@@ -104,10 +109,13 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                     .addComponent(jButton4)
                     .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(71, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        jPanel1.add(jPanel2, java.awt.BorderLayout.NORTH);
+
         jPanel3.setBackground(new java.awt.Color(40, 45, 55));
+        jPanel3.setPreferredSize(new java.awt.Dimension(250, 0));
 
         jScrollPane1.setViewportView(jTree1);
 
@@ -115,14 +123,17 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 320, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jScrollPane1)
         );
 
+        jPanel1.add(jPanel3, java.awt.BorderLayout.WEST);
+
         jPanel4.setBackground(new java.awt.Color(40, 45, 55));
+        jPanel4.setPreferredSize(new java.awt.Dimension(300, 0));
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -137,20 +148,39 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         ));
         jScrollPane2.setViewportView(jTable1);
 
+        panelDiscoVirtual.setBackground(new java.awt.Color(40, 45, 55));
+
+        javax.swing.GroupLayout panelDiscoVirtualLayout = new javax.swing.GroupLayout(panelDiscoVirtual);
+        panelDiscoVirtual.setLayout(panelDiscoVirtualLayout);
+        panelDiscoVirtualLayout.setHorizontalGroup(
+            panelDiscoVirtualLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        panelDiscoVirtualLayout.setVerticalGroup(
+            panelDiscoVirtualLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 615, Short.MAX_VALUE)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 730, Short.MAX_VALUE)
+            .addComponent(panelDiscoVirtual, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(panelDiscoVirtual, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
+        jPanel1.add(jPanel4, java.awt.BorderLayout.CENTER);
+
         jPanel5.setBackground(new java.awt.Color(40, 45, 55));
+        jPanel5.setPreferredSize(new java.awt.Dimension(300, 0));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
@@ -187,7 +217,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                         .addComponent(jScrollPane3)
                         .addContainerGap())
                     .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGap(0, 63, Short.MAX_VALUE)
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -200,7 +230,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(9, 9, 9)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 255, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 313, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -208,49 +238,9 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
-        );
+        jPanel1.add(jPanel5, java.awt.BorderLayout.EAST);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
+        getContentPane().add(jPanel1, java.awt.BorderLayout.CENTER);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -283,6 +273,34 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> new VentanaPrincipal().setVisible(true));
     }
+    
+    private void inicializarDiscoVisual() {
+        // Configuramos el panel para que use una cuadricula de 10 filas por 10 columnas
+        // Los dos ultimos numeros (2, 2) son los pixeles de separacion entre cada bloque
+        panelDiscoVirtual.setLayout(new java.awt.GridLayout(10, 10, 2, 2));
+
+        for (int i = 0; i < 100; i++) {
+            // Creamos la etiqueta con el numero del bloque (ej: 00, 01, 02... 99)
+            bloquesVisuales[i] = new javax.swing.JLabel(String.format("%02d", i), javax.swing.SwingConstants.CENTER);
+            
+            // Lo hacemos opaco para que se pueda pintar el fondo
+            bloquesVisuales[i].setOpaque(true);
+            
+            // Color por defecto (gris oscuro indicando que esta libre)
+            bloquesVisuales[i].setBackground(new java.awt.Color(60, 65, 75));
+            bloquesVisuales[i].setForeground(new java.awt.Color(220, 220, 220)); // Texto claro
+            
+            // Le ponemos un borde sutil para que parezcan celdas individuales
+            bloquesVisuales[i].setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(30, 35, 45)));
+            
+            // Agregamos el cuadrito al panel contenedor
+            panelDiscoVirtual.add(bloquesVisuales[i]);
+        }
+        
+        // Refrescamos el panel para que los cambios sean visibles
+        panelDiscoVirtual.revalidate();
+        panelDiscoVirtual.repaint();
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
@@ -306,5 +324,6 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTable jTable1;
     private javax.swing.JTree jTree1;
+    private javax.swing.JPanel panelDiscoVirtual;
     // End of variables declaration//GEN-END:variables
 }
