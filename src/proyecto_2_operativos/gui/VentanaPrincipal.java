@@ -12,12 +12,15 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(VentanaPrincipal.class.getName());
     private javax.swing.JLabel[] bloquesVisuales = new javax.swing.JLabel[100];
+    private proyecto_2_operativos.controladores.GestorArchivos gestor;
+    
 
     /**
      * Creates new form VentanaPrincipal
      */
     public VentanaPrincipal() {
         initComponents();
+        gestor = new proyecto_2_operativos.controladores.GestorArchivos(100);
         inicializarDiscoVisual();
     }
 
@@ -67,6 +70,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         jPanel2.setPreferredSize(new java.awt.Dimension(0, 80));
 
         jButton1.setText("Crear");
+        jButton1.addActionListener(this::jButton1ActionPerformed);
 
         jButton2.setText("Leer");
 
@@ -252,6 +256,36 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        // 1. Generamos un color aleatorio en formato hexadecimal para diferenciar los archivos
+        java.util.Random rand = new java.util.Random();
+        int r = rand.nextInt(200) + 55; // Colores claros
+        int g = rand.nextInt(200) + 55;
+        int b = rand.nextInt(200) + 55;
+        String colorHex = String.format("#%02x%02x%02x", r, g, b);
+
+        // 2. Simulamos la creacion de un archivo de tamano aleatorio (entre 1 y 10 bloques)
+        int tamanoAleatorio = rand.nextInt(10) + 1;
+        // Generamos un nombre unico usando los milisegundos actuales
+        String nombrePrueba = "doc_" + (System.currentTimeMillis() % 1000) + ".txt";
+
+        // 3. Usamos el gestor para intentar crearlo directamente en la carpeta raiz
+        boolean exito = gestor.crearArchivo(gestor.getDirectorioRaiz(), nombrePrueba, tamanoAleatorio, "Administrador", colorHex);
+
+        if (exito) {
+            System.out.println("Archivo " + nombrePrueba + " creado (" + tamanoAleatorio + " bloques).");
+            
+            // 4. Actualizamos la cuadricula visual para ver los bloques ocupados
+            actualizarDiscoVisual();
+            actualizarTabla(); 
+            actualizarArbol(); 
+        } else {
+            // El documento exige limitar el almacenamiento y evitar crear si no hay espacio
+            javax.swing.JOptionPane.showMessageDialog(this, "Error: No hay " + tamanoAleatorio + " bloques libres en el disco.", "Disco Lleno", javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -279,11 +313,10 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     
     private void inicializarDiscoVisual() {
         // Configuramos el panel para que use una cuadricula de 10 filas por 10 columnas
-        // Los dos ultimos numeros (2, 2) son los pixeles de separacion entre cada bloque
         panelDiscoVirtual.setLayout(new java.awt.GridLayout(10, 10, 2, 2));
 
         for (int i = 0; i < 100; i++) {
-            // Creamos la etiqueta con el numero del bloque (ej: 00, 01, 02... 99)
+            // Creamos la etiqueta con el numero del bloque
             bloquesVisuales[i] = new javax.swing.JLabel(String.format("%02d", i), javax.swing.SwingConstants.CENTER);
             
             // Lo hacemos opaco para que se pueda pintar el fondo
@@ -293,7 +326,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             bloquesVisuales[i].setBackground(new java.awt.Color(60, 65, 75));
             bloquesVisuales[i].setForeground(new java.awt.Color(220, 220, 220)); // Texto claro
             
-            // Le ponemos un borde sutil para que parezcan celdas individuales
+            // Le ponemos un borde para que parezcan celdas individuales
             bloquesVisuales[i].setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(30, 35, 45)));
             
             // Agregamos el cuadrito al panel contenedor
@@ -303,6 +336,66 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         // Refrescamos el panel para que los cambios sean visibles
         panelDiscoVirtual.revalidate();
         panelDiscoVirtual.repaint();
+    }
+    
+    // Metodo para actualizar los colores de la cuadricula segun el estado del disco
+    public void actualizarDiscoVisual() {
+        proyecto_2_operativos.modelos.Bloque[] bloquesDelDisco = gestor.getDisco().getBloques();
+        
+        for (int i = 0; i < 100; i++) {
+            if (bloquesDelDisco[i].isOcupado()) {
+                // Si esta ocupado, lo pintamos del color hexadecimal del archivo
+                String hex = bloquesDelDisco[i].getColorHex();
+                bloquesVisuales[i].setBackground(java.awt.Color.decode(hex));
+                // Le pone el nombre del archivo como texto flotante 
+                bloquesVisuales[i].setToolTipText(bloquesDelDisco[i].getNombreArchivo());
+            } else {
+                // Si esta libre vuelve al gris oscuro original
+                bloquesVisuales[i].setBackground(new java.awt.Color(60, 65, 75));
+                bloquesVisuales[i].setToolTipText("Libre");
+            }
+        }
+        panelDiscoVirtual.repaint();
+    }
+    
+    // Metodo para actualizar el JTable con los archivos creados
+    public void actualizarTabla() {
+        javax.swing.table.DefaultTableModel modelo = (javax.swing.table.DefaultTableModel) jTable1.getModel();
+        modelo.setRowCount(0); // Borramos las filas anteriores para no duplicar
+        
+        proyecto_2_operativos.modelos.Directorio raiz = gestor.getDirectorioRaiz();
+        proyecto_2_operativos.estructuras.ListaEnlazada<proyecto_2_operativos.modelos.Archivo> archivos = raiz.getArchivos();
+        
+        // Recorremos nuestra lista enlazada propia
+        for (int i = 0; i < archivos.getSize(); i++) {
+            proyecto_2_operativos.modelos.Archivo arch = archivos.get(i);
+            // Agregamos la fila: Nombre, Bloques, Primer Bloque
+            modelo.addRow(new Object[]{arch.getNombre(), arch.getTamanoBloques(), arch.getPrimerBloque()});
+        }
+    }
+    
+    // Metodo para actualizar el JTree de directorios y archivos
+    public void actualizarArbol() {
+        proyecto_2_operativos.modelos.Directorio raiz = gestor.getDirectorioRaiz();
+        
+        // Creamos el nodo principal (La carpeta raiz)
+        javax.swing.tree.DefaultMutableTreeNode nodoRaiz = new javax.swing.tree.DefaultMutableTreeNode(raiz.getNombre());
+        
+        proyecto_2_operativos.estructuras.ListaEnlazada<proyecto_2_operativos.modelos.Archivo> archivos = raiz.getArchivos();
+        
+        // Agregamos cada archivo como un "hijo" de la carpeta raiz
+        for (int i = 0; i < archivos.getSize(); i++) {
+            proyecto_2_operativos.modelos.Archivo arch = archivos.get(i);
+            String infoNodo = arch.getNombre() + " (" + arch.getTamanoBloques() + " bloques)";
+            nodoRaiz.add(new javax.swing.tree.DefaultMutableTreeNode(infoNodo));
+        }
+        
+        // Le aplicamos el nuevo modelo al JTree visual
+        javax.swing.tree.DefaultTreeModel modeloArbol = new javax.swing.tree.DefaultTreeModel(nodoRaiz);
+        jTree1.setModel(modeloArbol);
+        
+        // Expandimos la raiz para que se vean los archivos por defecto
+        jTree1.expandRow(0);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
