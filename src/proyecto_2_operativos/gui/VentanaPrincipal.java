@@ -278,6 +278,8 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             
             // 4. Actualizamos la cuadricula visual para ver los bloques ocupados
             actualizarDiscoVisual();
+            actualizarTabla(); 
+            actualizarArbol(); 
         } else {
             // El documento exige limitar el almacenamiento y evitar crear si no hay espacio
             javax.swing.JOptionPane.showMessageDialog(this, "Error: No hay " + tamanoAleatorio + " bloques libres en el disco.", "Disco Lleno", javax.swing.JOptionPane.ERROR_MESSAGE);
@@ -354,6 +356,46 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             }
         }
         panelDiscoVirtual.repaint();
+    }
+    
+    // Metodo para actualizar el JTable con los archivos creados
+    public void actualizarTabla() {
+        javax.swing.table.DefaultTableModel modelo = (javax.swing.table.DefaultTableModel) jTable1.getModel();
+        modelo.setRowCount(0); // Borramos las filas anteriores para no duplicar
+        
+        proyecto_2_operativos.modelos.Directorio raiz = gestor.getDirectorioRaiz();
+        proyecto_2_operativos.estructuras.ListaEnlazada<proyecto_2_operativos.modelos.Archivo> archivos = raiz.getArchivos();
+        
+        // Recorremos nuestra lista enlazada propia
+        for (int i = 0; i < archivos.getSize(); i++) {
+            proyecto_2_operativos.modelos.Archivo arch = archivos.get(i);
+            // Agregamos la fila: Nombre, Bloques, Primer Bloque
+            modelo.addRow(new Object[]{arch.getNombre(), arch.getTamanoBloques(), arch.getPrimerBloque()});
+        }
+    }
+    
+    // Metodo para actualizar el JTree de directorios y archivos
+    public void actualizarArbol() {
+        proyecto_2_operativos.modelos.Directorio raiz = gestor.getDirectorioRaiz();
+        
+        // Creamos el nodo principal (La carpeta raiz)
+        javax.swing.tree.DefaultMutableTreeNode nodoRaiz = new javax.swing.tree.DefaultMutableTreeNode(raiz.getNombre());
+        
+        proyecto_2_operativos.estructuras.ListaEnlazada<proyecto_2_operativos.modelos.Archivo> archivos = raiz.getArchivos();
+        
+        // Agregamos cada archivo como un "hijo" de la carpeta raiz
+        for (int i = 0; i < archivos.getSize(); i++) {
+            proyecto_2_operativos.modelos.Archivo arch = archivos.get(i);
+            String infoNodo = arch.getNombre() + " (" + arch.getTamanoBloques() + " bloques)";
+            nodoRaiz.add(new javax.swing.tree.DefaultMutableTreeNode(infoNodo));
+        }
+        
+        // Le aplicamos el nuevo modelo al JTree visual
+        javax.swing.tree.DefaultTreeModel modeloArbol = new javax.swing.tree.DefaultTreeModel(nodoRaiz);
+        jTree1.setModel(modeloArbol);
+        
+        // Expandimos la raiz para que se vean los archivos por defecto
+        jTree1.expandRow(0);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

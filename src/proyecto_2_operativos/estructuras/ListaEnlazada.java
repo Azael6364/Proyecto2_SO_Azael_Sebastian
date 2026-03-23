@@ -36,6 +36,18 @@ public class ListaEnlazada<T> {
     public int getSize() {
         return size;
     }
+    
+    // Metodo para obtener un elemento por su indice
+    public T get(int index) {
+        if (index < 0 || index >= size) {
+            return null;
+        }
+        Nodo<T> current = head;
+        for (int i = 0; i < index; i++) {
+            current = current.getNext();
+        }
+        return current.getData();
+    }
 
     // Método para verificar si está vacía
     public boolean isEmpty() {
