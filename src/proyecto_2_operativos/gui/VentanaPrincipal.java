@@ -6,6 +6,8 @@ import proyecto_2_operativos.controladores.PlanificadorDisco.Politica;
 import proyecto_2_operativos.controladores.PlanificadorDisco.ResultadoPlanificacion;
 import proyecto_2_operativos.estructuras.ListaEnlazada;
 import proyecto_2_operativos.modelos.*;
+import proyecto_2_operativos.controladores.HiloProcesador;
+import proyecto_2_operativos.modelos.OperacionCRUD;
 
 /**
  * Ventana principal del simulador de sistema de archivos concurrente
@@ -45,6 +47,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         initComponents();
         gestor = new GestorArchivos(100);
         directorioActual = gestor.getDirectorioRaiz();
+        
 
         // Inicializamos los modelos de las listas
         modeloJournal = new javax.swing.DefaultListModel<>();
@@ -85,7 +88,8 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 directorioActual = (Directorio) nodo.getUserObject();
             }
         });
-
+        HiloProcesador procesador = new HiloProcesador(this, gestor);
+        procesador.start();
         inicializarDiscoVisual();
         actualizarTodo();
     }
@@ -787,6 +791,14 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         }
         java.awt.EventQueue.invokeLater(() -> new VentanaPrincipal().setVisible(true));
     }
+    
+    public void actualizarTodoThreadSafe() {
+    actualizarArbol();
+    actualizarTabla();
+    actualizarDiscoVisual();
+    actualizarCola();
+    actualizarJournal();
+}
 
     // Variables declaration - do not modify
     private javax.swing.JButton jButton1;
