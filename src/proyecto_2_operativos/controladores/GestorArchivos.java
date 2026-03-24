@@ -333,6 +333,16 @@ public class GestorArchivos {
         } catch (Exception ex) {
             return "Error al parsear JSON: " + ex.getMessage();
         }
+
+        // Creamos un PCB por cada archivo cargado para que el planificador los use
+        // Usamos el primer bloque del archivo como posicion del cabezal
+        for (int i = 0; i < directorioRaiz.getArchivos().getSize(); i++) {
+            Archivo a = directorioRaiz.getArchivos().get(i);
+            PCB p = new PCB(OperacionCRUD.LEER, a.getNombre(), "Sistema", a.getPrimerBloque());
+            p.setEstado(EstadoProceso.LISTO);
+            colaES.encolar(p);
+        }
+
         return log.toString();
     }
 
