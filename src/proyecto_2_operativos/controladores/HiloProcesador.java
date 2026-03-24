@@ -42,7 +42,7 @@ public class HiloProcesador extends Thread {
                     javax.swing.SwingUtilities.invokeLater(() -> ventana.actualizarTodoThreadSafe());
                     
                     // 3. Simulamos un retardo de E/S (2 segundos) para que se vea en pantalla
-                    Thread.sleep(2000); 
+                    Thread.sleep(4000); 
                     
                     // 4. Ejecutamos la operacion real segun el PCB
                     ejecutarOperacionReal(procesoActual);
@@ -63,16 +63,44 @@ public class HiloProcesador extends Thread {
 
     // Metodo que traduce el PCB a la orden real en el Gestor
     private void ejecutarOperacionReal(PCB p) {
+        int resultado;
         switch (p.getOperacion()) {
             case CREAR:
-                // Usamos un color aleatorio o el del gestor
-                gestor.crearArchivo(gestor.getDirectorioRaiz(), p.getNombreArchivo(), 
+                resultado = gestor.crearArchivo(gestor.getDirectorioRaiz(), p.getNombreArchivo(), 
                                     p.getTamanoBloques(), p.getUsuario(), gestor.siguienteColor());
+                if(resultado == -1) mostrarMensaje("No hay espacio suficiente para " + p.getNombreArchivo(), true);
+                else if(resultado == -2) mostrarMensaje("El archivo " + p.getNombreArchivo() + " esta bloqueado.", true);
                 break;
+                
             case ELIMINAR:
-                gestor.eliminarArchivo(gestor.getDirectorioRaiz(), p.getNombreArchivo());
+                resultado = gestor.eliminarArchivo(gestor.getDirectorioRaiz(), p.getNombreArchivo());
+                if(resultado == -1) mostrarMensaje("No se encontro el archivo " + p.getNombreArchivo(), true);
                 break;
-            // Aqui se pueden agregar LEER y ACTUALIZAR
+                
+            case ACTUALIZAR:
+                resultado = gestor.actualizarNombreArchivo(gestor.getDirectorioRaiz(), p.getNombreArchivo(), p.getNuevoNombre());
+                if(resultado == -1) mostrarMensaje("No se encontro el archivo " + p.getNombreArchivo(), true);
+                break;
+                
+            case LEER:
+                proyecto_2_operativos.modelos.Archivo arch = gestor.leerArchivo(gestor.getDirectorioRaiz(), p.getNombreArchivo());
+                if (arch != null) {
+                    mostrarMensaje("Lectura Exitosa:\nArchivo: " + arch.getNombre() + "\nBloques: " + arch.getTamanoBloques() + "\nDueño: " + arch.getDueno(), false);
+                } else {
+                    mostrarMensaje("Archivo no encontrado o bloqueado por otro proceso.", true);
+                }
+                break;
         }
+    }
+
+    // Metodo seguro para mostrar pop-ups desde un hilo en segundo plano sin romper Java Swing
+    private void mostrarMensaje(String msg, boolean esError) {
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            if (esError) {
+                javax.swing.JOptionPane.showMessageDialog(ventana, msg, "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+            } else {
+                javax.swing.JOptionPane.showMessageDialog(ventana, msg, "Informacion", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
     }
 }
